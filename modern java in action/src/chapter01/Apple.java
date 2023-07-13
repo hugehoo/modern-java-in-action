@@ -1,11 +1,29 @@
 package chapter01;
 
+
+
 public class Apple {
-    private String color;
+    private Color color;
+
+    @Override
+    public String toString() {
+        return "{" +
+            "color=" + color +
+            ", weight=" + weight +
+            ", quality='" + quality + '\'' +
+            '}';
+    }
+
     private double weight;
     private String quality;
 
-    public String getColor() {
+    public Apple(Color color, double weight, String quality) {
+        this.color = color;
+        this.weight = weight;
+        this.quality = quality;
+    }
+
+    public Color getColor() {
         return color;
     }
 

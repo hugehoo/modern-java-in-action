@@ -30,5 +30,32 @@ File[] hiddenFiles = new File(".").listFiles(new FileFilter() {
 File[] hiddenFiles = new File(".").listFiles(File::isHidden);
 ```
 
-### 코드 넘겨주기 예시 / Lambda : Anonymous Function
+### 디폴트 메서드와 자바 모듈
+- 인터페이스를 구현한 클래스가 여러가지 일 때, 인터페이스를 변경하는 것은 어려운 일이다.
+- 하지만 디폴트 메서드가 등장하면서 인터페이스를 구현하는 클래스를 강제로 변경하지 않아도 된다.
+- 예를 들어 자바8 이전에는 List<T> 가 stream 이나 parallelStream 메서드를 지원하지 않는다는 것이 문제였다. 그 때문에 아래의 코드는 컴파일 되지 않았다.
+- 그럼 어떻게 기존 구현을 고치지 않고, 이미 공개된 인터페이스를 변경할 수 있을까?
+- Default Method 의 등장이 이를 해결한다.
+- 메서드 구현의 책임이 구체 클래스에 있지 않고, 인터페이스의 일부로 포함된다.
+``` java
+List<Apple> collect = inventory.parallelStream()
+.filter((Apple a) -> a.getWeight() > 100)
+.toList();
+```
 
+``` java
+// Collection Interface
+// parallelStream() 디폴트 메서드로 구현돼 있는걸 확인 가능
+default Stream<E> parallelStream() {
+    return StreamSupport.stream(spliterator(), true);
+}
+```
+
+- 자바8 이전에 `sort()` 메서드는 직접 구현해야 했지만, 
+- 자바8 이후 List 인터페이스에 sort() 디폴트 메서드가 추가되어 List 의 인스턴스는 sort 메서드를 직접 호출할 수 있다.
+
+
+### 마치며
+- 자바8은 프로그램을 더 효과적이고 간결하게 구현할 수 있는 새로운 개념과 기능 제공
+- 기존 자바는 멀티코어 프로세서를 온전히 활용하기 어렵다 -> 스트림의 등장으로 멀티코어를 비교적 쉽게 다룰 수 있다.
+- 함수는 일급값이다, 메서드를 어떻게 함수형값으로 넘기는지, 익명함수를 어떻게 구현하는지 기억하자. 
