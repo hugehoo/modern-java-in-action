@@ -27,7 +27,7 @@ public class Apple {
         return color;
     }
 
-    public double getWeight() {
+    public Double getWeight() {
         return weight;
     }
 

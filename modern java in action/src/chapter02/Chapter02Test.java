@@ -3,6 +3,7 @@ package chapter02;
 import static chapter01.Color.*;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -16,18 +17,18 @@ import chapter01.Color;
 public class Chapter02Test {
 
     List<Apple> inventory = new ArrayList<>();
+
     @BeforeEach
     void init() {
-        inventory = List.of(
-            new Apple(RED, 100, "high"),
-            new Apple(RED, 80, "middle"),
-            new Apple(RED, 70, "low"),
-            new Apple(RED, 120, "high"),
-            new Apple(RED, 50, "low"),
-            new Apple(GREEN, 110, "high"),
-            new Apple(GREEN, 80, "low"),
-            new Apple(GREEN, 130, "high")
-        );
+        inventory.add(new Apple(RED, 100, "high"));
+        inventory.add(new Apple(RED, 80, "middle"));
+        inventory.add(new Apple(RED, 70, "low"));
+        inventory.add(new Apple(RED, 120, "high"));
+        inventory.add(new Apple(RED, 50, "low"));
+        inventory.add(new Apple(GREEN, 110, "high"));
+        inventory.add(new Apple(RED, 110, "high"));
+        inventory.add(new Apple(GREEN, 80, "low"));
+        inventory.add(new Apple(GREEN, 130, "high"));
     }
 
     @Test
@@ -68,6 +69,69 @@ public class Chapter02Test {
         filterApplesByMultiPredicatesImproved(inventory, predicates);
     }
 
+    @Test
+    void weightSortingLambda() {
+        inventory.sort((Apple a1, Apple a2) -> a1.getWeight().compareTo(a2.getWeight()));
+        for (Apple apple : inventory) {
+            System.out.println(apple);
+        }
+    }
+
+    @Test
+    void weightSortingLDefaultMethod() {
+        Comparator<Apple> appleComparator = Comparator.comparing(Apple::getWeight)
+            .thenComparing(Apple::getColor);
+        inventory.sort(appleComparator);
+
+        for (Apple apple : inventory) {
+            System.out.println(apple);
+        }
+    }
+
+    @Test
+    void parallelStream() {
+        List<Apple> inventory = new ArrayList<>();
+        int i = 1;
+        while (i <= 30) {
+            inventory.add(new Apple(GREEN, 130, "high"));
+            i += 1;
+        }
+        System.out.println("inventory.size() = " + inventory.size());
+        
+        long start = System.currentTimeMillis();
+        inventory.stream()
+            .parallel()
+            .forEach(d -> {
+                System.out.println("Starting " + Thread.currentThread().getName());
+                apiCall(d);
+            });
+        System.out.println(System.currentTimeMillis() - start);
+    }
+
+    @Test
+    void commonStream() {
+        List<Apple> inventory = new ArrayList<>();
+        int i = 1;
+        while (i <= 50) {
+            inventory.add(new Apple(GREEN, 130, "high"));
+            i += 1;
+        }
+        System.out.println("inventory.size() = " + inventory.size());
+
+        long start2 = System.currentTimeMillis();
+        inventory.stream()
+            .forEach(this::apiCall);
+        System.out.println(System.currentTimeMillis() - start2);
+    }
+
+    public void apiCall(Apple a) {
+        try {
+            // call External API using Apple a
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            // handle exception
+        }
+    }
 
     public List<Apple> filterApplesByMultiPredicates(List<Apple> inventory, List<Predicate<Apple>> predicates) {
         List<Apple> result = new ArrayList<>();
@@ -112,7 +176,6 @@ public class Chapter02Test {
         boolean test(Apple apple);
     }
 
-
     public static class AppleHeavyPredicate implements ApplePredicate {
         @Override
         public boolean test(Apple apple) {
@@ -135,5 +198,10 @@ public class Chapter02Test {
             }
         }
         return result;
+    }
+
+    public List<Apple> sortImplement() {
+        inventory.sort((Apple a1, Apple a2) -> a1.getWeight().compareTo(a2.getWeight()));
+        return inventory;
     }
 }
