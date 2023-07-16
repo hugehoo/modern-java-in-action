@@ -1,6 +1,20 @@
 ### 자바의 진화
 - 자바 8에서는 고전적인 객체지향에서 벗어나 함수형 프로그래밍으로 다가섰다.
-- e.g) 예를 들어, 우리가 하려는 작업이 최우선시되며, 그 작업을 구체적으로 어떻게 수행할지는 별개의 문제로 취급한다.
+
+#### 자바 8의 주요 특징 4가지
+
+1. 람다 표현식 : 익명 함수를 생성하여 코드가 간결해지며 코드 중복을 줄일 수 있다.
+   - 문제 해결: 기존 자바에서는 함수의 인자로 값을 넘길 때 익명 클래스를 사용해서 코드를 작성했지만, 이로 인해 코드가 번잡했으며 가독성이 떨어졌습니다.
+     람다 표현식으로 인해 간결한 코드 작성이 가능해졌다.
+2. 스트림 API : 스트림 API를 도입하여 데이터 컬렉션을 유용히 처리할 수 있다. 스트림 API 를 사용하면 병렬 처리 가능한 코드를 간단하게 구현할 수 있다.
+  - 문제 해결: 기존 자바에서는 직접 반복문 등을 사용하여 데이터를 처리했다. 이는 번거롭고, 병렬 처리를 위한 추가적인 구현이 필요했지만, 
+  스트림 API로 인해 간편하게 데이터 처리와 병렬 처리를 구현할 수 있게 됐다.
+3. 디폴트 메서드 및 Method 참조 : 인터페이스에 디폴트 메서드와 정적 메서드를 추가할 수 있게 됐다. 기존 코드 수정 없이 인터페이스를 개선하고, 새로운 기능을 추가할 수 있다.
+   - 문제 해결: 기존 자바에서는 인터페이스를 변경하면 모든 구현 클래스를 수정해야 했다. 
+   하지만 디폴트 메서드와 정적 메서드를 통해 인터페이스 변경에 따른 수정 사항을 최소화할 수 있게 됐다.
+- `정리` : Java 8은 코드의 가독성과 작성 효율, 병렬 처리, 인터페이스의 유연성 등은 개선했다. 이로 인해 자바 개발자들에게 보다 사용하기 쉬운 개발 환경을 제공할 수 있었다.
+
+- e.g) 함수형 프로그래밍을 예로 들면 우리가 수행하는 작업이 최우선시되며, 그 작업을 구체적으로 어떻게 수행할지는 별개의 문제로 취급한다.
 ``` java
 // filtering 요건에 맞는 메서드를 매번 구현해야 한다.
  public List<Apple> filterGreenApples(List<Apple> inventory) {
@@ -12,16 +26,6 @@
         }
         return result;
     }
-
-  public List<Apple> filterHeavyApples(List<Apple> inventory) {
-      List<Apple> result = new ArrayList<>();
-      for (Apple apple : inventory) {
-          if (apple.getWeight() >= 100) {
-              result.add(apple);
-          }
-      }
-      return result;
-  }
 
   public List<Apple> filterGoodQualityApples(List<Apple> inventory) {
       List<Apple> result = new ArrayList<>();
@@ -143,3 +147,10 @@ default Stream<E> parallelStream() {
 - 자바8은 프로그램을 더 효과적이고 간결하게 구현할 수 있는 새로운 개념과 기능 제공
 - 기존 자바는 멀티코어 프로세서를 온전히 활용하기 어렵다 -> 스트림의 등장으로 `멀티 코어`를 비교적 쉽게 다룰 수 있다.
 - 함수는 일급값이다, 메서드를 어떻게 함수형값으로 넘기는지, 익명함수를 어떻게 구현하는지 기억하자. 
+
+<hr/>
+
+#### Reference
+- 모던 자바 인 액션 chapter01
+- [https://inpa.tistory.com](https://inpa.tistory.com/entry/CS-%F0%9F%91%A8%E2%80%8D%F0%9F%92%BB-%EC%9D%BC%EA%B8%89-%EA%B0%9D%EC%B2%B4first-class-object)
+- [https://bcp0109.tistory.com](https://bcp0109.tistory.com/313)
