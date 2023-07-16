@@ -1,7 +1,7 @@
 ### 자바의 진화
 - 자바 8에서는 고전적인 객체지향에서 벗어나 함수형 프로그래밍으로 다가섰다.
 
-#### 자바 8의 주요 특징 4가지
+#### 자바 8의 주요 특징 3가지
 
 1. 람다 표현식 : 익명 함수를 생성하여 코드가 간결해지며 코드 중복을 줄일 수 있다.
    - 문제 해결: 기존 자바에서는 함수의 인자로 값을 넘길 때 익명 클래스를 사용해서 코드를 작성했지만, 이로 인해 코드가 번잡했으며 가독성이 떨어졌습니다.
@@ -49,14 +49,46 @@ List<Apple> filterApples(List<Apple> inventory, Predicate<Apple> p) {
 
 
 ### 함수를 값처럼 취급할 때의 장점
-- 이급 시민을 일급 시민으로 만든 이유
-- 자바의 다양한 값(객체, 인스턴스, 기본형, 참조형 등)
 - 자바의 다양한 구조체(클래스, 메서드)는 값의 구조를 표현하는데 도움이 될 수 있다.
   - 하지만 프로그램을 실행하는 동안 이러한 구조체는 자유롭게 전달할 수 없다.
   - 이렇게 전달할 수 없는 구조체를 이급 시민이라 한다.
   - 즉 메서드와 클래스는 그 자체로 값이 될 수 없다. 
   - 이게 왜 중요한가?
-  - 만약 런타임에 메서드를 전달할 수 있다면, 즉 메서드를 일급 시민으로 만들수 있으면 프로그래밍에 유용하게 활용할 수 있다. 
+  - 만약 런타임에 메서드를 전달할 수 있다면, 즉 메서드를 일급 시민으로 만들수 있으면 프로그래밍에 유용하게 활용할 수 있다.
+
+  - 예시) 컴파일 타임에 메서드를 넘긴 사례
+``` java
+public class CompileTimeMethod {
+
+    public static void main(String[] args) {
+        Integer[] numbers = {3, 1, 4, 2, 5};
+
+        // Ascending order comparator (컴파일 타임에 메서드를 전달)
+        Comparator<Integer> ascendingComparator = new Comparator<Integer>() {
+            @Override
+            public int compare(Integer o1, Integer o2) {
+                return o1.compareTo(o2);
+            }
+        };
+
+        // 정렬 메서드에 정의된 comparator 전달
+        Arrays.sort(numbers, ascendingComparator);
+        System.out.println("Ascending order: " + Arrays.toString(numbers));
+
+        // Descending order comparator (컴파일 타임에 메서드를 전달)
+        Comparator<Integer> descendingComparator = new Comparator<Integer>() {
+            @Override
+            public int compare(Integer o1, Integer o2) {
+                return o2.compareTo(o1);
+            }
+        };
+
+        // 정렬 메서드에 정의된 comparator 전달
+        Arrays.sort(numbers, descendingComparator);
+        System.out.println("Descending order: " + Arrays.toString(numbers));
+    }
+}
+```
 
 ### 자바의 일급 객체
 - 자바에서는 보통 람다와 익명 함수를 배울 때 일급 시민 (객체) 라는 표현을 사용. 
@@ -68,10 +100,14 @@ List<Apple> filterApples(List<Apple> inventory, Predicate<Apple> p) {
 - 자바의 `람다(익명 함수)`는 변수나 인자에 할당 가능하며, 리턴 값으로도 사용가능하기 때문에 일급 객체의 요건을 충족한다.
 
 #### 일급 객체의 요건을 충족하며 생긴 이점
-- 객체의 인자로 넘길 수 있기 때문에 filter 메서드의 두번째 인자로 함수를 넣을 수 있다.
+- 객체를 메서드의 인자로 넘길 수 있기 때문에 filter 메서드의 두번째 인자로 함수를 넣을 수 있다.
 - 이로써 코드 재활용이 수월해진다. 람다가 없던 시절에는 filter() 의 두번째 인자로 함수를 넘길 수 없었기 때문에 매번 filter 메서드를 재구현 했으리라 예상해본다.
-- 즉 일급객체가 중요한 이유 중 하나는 아래의 코드 재활용 예시처럼, 프로그래밍의 효율성과 유연성을 높일 수 있기 때문이다. 
+- 즉 일급객체가 중요한 이유 중 하나는 아래의 코드 재활용 예시처럼, 프로그래밍의 효율성과 유연성을 높일 수 있기 때문이다.
 
+<br/>
+
+- 일급 시민은 런타임에 메서드를 전달할 수 있다.
+- 런타임에 메서드를 제공 : 프로그램이 실행되는 도중에 함수를 전달하거나 수정할 수 있는 능력을 의미. 즉, 컴파일 시점에서 이미 정의된 것이 아닌 실행 시점에 조건에 따라 다른 동작이나 함수를 전달할 수 있다.
 ``` java
 public class Example {
 
@@ -90,11 +126,11 @@ public class Example {
         List<Integer> numbers = List.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
 
         // 1. 2의 배수 찾기 : Predicate<T> 인터페이스의 test()메서드 내부 로직이 실행됩니다.
-        List<Integer> evenNumbers = filter(numbers, x -> x % 2 == 0);
+        List<Integer> evenNumbers = filter(numbers, x -> x % 2 == 0); // 해당 라인이 실행되기 전까지 filter() method 는 어떤 predicate 를 실행할지 알지 못한다.
         System.out.println("even numbers: " + evenNumbers);
 
         // 2. 홀수 찾기 : Predicate<T> 인터페이스의 test()메서드 내부 로직이 실행됩니다.
-        List<Integer> oddNumbers = filter(numbers, x -> x % 2 != 0);
+        List<Integer> oddNumbers = filter(numbers, x -> x % 2 != 0);  // 해당 라인이 실행되기 전까지 filter() method 는 어떤 predicate 를 실행할지 알지 못한다.
         System.out.println("odd numbers: " + oddNumbers);
     }
 }
