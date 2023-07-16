@@ -43,7 +43,7 @@ public class Chapter01Test {
 
     @Test
     public void 함수형_프로그래밍_코드() {
-        List<Apple> 초록사과 = filterApples(사과박스, a -> a.getColor().equals(GREEN));
+        List<Apple> 초록사과 = filterApples(사과박스, a -> a.getColor().equals(GREEN)); // a.getColor() 도 generic 을 사용하면 Apple 외 다른 타입에도 적용 가능할듯
         List<Apple> 무거운사과 = filterApples(사과박스, a -> a.getWeight() >= 100);
         List<Apple> 상급사과 = filterApples(사과박스, a -> a.getQuality().equals("Good"));
 
