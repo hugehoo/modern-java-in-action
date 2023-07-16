@@ -190,3 +190,5 @@ default Stream<E> parallelStream() {
 - 모던 자바 인 액션 chapter01
 - [https://inpa.tistory.com](https://inpa.tistory.com/entry/CS-%F0%9F%91%A8%E2%80%8D%F0%9F%92%BB-%EC%9D%BC%EA%B8%89-%EA%B0%9D%EC%B2%B4first-class-object)
 - [https://bcp0109.tistory.com](https://bcp0109.tistory.com/313)
+
+- java5 부터 concurrent -> 멀티 코어 

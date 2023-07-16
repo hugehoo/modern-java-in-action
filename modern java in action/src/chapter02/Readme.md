@@ -85,3 +85,8 @@ default Comparator<T> thenComparing(Comparator<? super T> other) {
 
 
 - Runnable, Callable 등의 스레드 기법도 동작을 파라미터화 하여 메서드의 인수로 넘길 수 있다는걸 보여줬다. 
+
+
+##### Reference
+- https://m.blog.naver.com/tmondev/220945933678
+- https://javabom.tistory.com/59

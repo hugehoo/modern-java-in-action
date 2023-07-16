@@ -51,6 +51,7 @@ public class Chapter02Test {
     @Test
     void byLambda() {
         filterApplesByLambda(사과박스, (Apple apple) -> GREEN.equals(apple.getColor()));
+        filterApplesByLambda(사과박스, (Apple apple) -> RED.equals(apple.getColor()));
         filterApplesByLambda(사과박스, (Apple apple) -> apple.getWeight() > 100);
     }
 
@@ -96,6 +97,9 @@ public class Chapter02Test {
 
     @Test
     void 다양한_기준으로_정렬() {
+        // 1) 무게
+        // 2) 색깔
+        // 3) ...
         Comparator<Apple> appleComparator = Comparator.comparing(Apple::getWeight)
             .thenComparing(Apple::getColor);
         사과박스.sort(appleComparator);
@@ -109,7 +113,7 @@ public class Chapter02Test {
     void 병렬_스트림_테스트() {
         List<Apple> 더미_데이터 = new ArrayList<>();
         int i = 1;
-        while (i <= 30) {
+        while (i <= 50) {
             더미_데이터.add(new Apple(GREEN, 130, "high"));
             i += 1;
         }
@@ -135,6 +139,9 @@ public class Chapter02Test {
 
         System.out.println("더미_데이터.size() = " + 더미_데이터.size());
         long 측정_시작 = System.currentTimeMillis();
+
+
+        // multi-core -> single core
         더미_데이터.stream()
             .forEach(this::dummyApiCall);
         System.out.println(System.currentTimeMillis() - 측정_시작);
@@ -143,6 +150,7 @@ public class Chapter02Test {
     public void dummyApiCall(Apple a) {
         try {
             // call External API using Apple a
+            // 외부시스템 -> 1s
             Thread.sleep(500);
         } catch (InterruptedException e) {
             // handle exception

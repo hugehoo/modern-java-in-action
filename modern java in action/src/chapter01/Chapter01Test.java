@@ -32,6 +32,7 @@ public class Chapter01Test {
     @Test
     public void 고전적_객체지향_코드() {
 
+        // filter
         List<Apple> 초록사과 = filterGreenApples(사과박스);
         List<Apple> 무거운사과 = filterHeavyApples(사과박스);
         List<Apple> 상급사과 = filterGoodQualityApples(사과박스);
