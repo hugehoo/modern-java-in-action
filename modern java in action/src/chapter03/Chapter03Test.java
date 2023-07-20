@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -32,7 +33,7 @@ public class Chapter03Test {
     }
 
     @Test
-    public void Predicate_AND_TEST() {
+    public void PREDICATE_AND_TEST() {
         Predicate<Apple> filterHeavy = apple -> apple.getWeight() >= 100;
         List<Apple> highQualityApples = filterApplesWithHeavyWeight(사과박스, filterHeavy);
         highQualityApples.forEach(a ->
@@ -47,11 +48,21 @@ public class Chapter03Test {
     }
 
     @Test
-    public void Predicate_OR_TEST() {
+    public void PREDICATE_OR_TEST() {
         Predicate<Apple> filterHeavy = apple -> apple.getWeight() >= 100;
         List<Apple> highQualityApples = filterApplesWithRedColor(사과박스, filterHeavy);
         highQualityApples.forEach(a ->
             assertTrue(a.getWeight() >= 100 || a.getColor().equals(RED))
+        );
+    }
+
+    @Test
+    public void Cons() {
+        Consumer<Apple> printColor = apple -> System.out.println(apple.getColor());
+        사과박스.forEach(apple ->
+            printColor
+                .andThen(apple1 -> System.out.println(apple1.getWeight()))
+                .accept(apple)
         );
     }
 

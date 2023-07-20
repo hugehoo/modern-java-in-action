@@ -5,6 +5,9 @@ import static java.util.Comparator.*;
 import static java.util.stream.Collectors.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.File;
+import java.io.FileFilter;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -12,13 +15,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-class MainTest {
+class MainChapter02Test {
 
     static List<Dish> menu;
 
@@ -116,4 +120,70 @@ class MainTest {
         return maxBy(comparingInt(Dish::getCaloric));
     }
 
+    File[] hiddenFiles = new File(".").listFiles(new FileFilter() {
+        public boolean accept(File file) {
+            return file.isHidden();
+        }
+    });
+
+    public static class Apple {
+        private String color;
+        private double weight;
+        private String quality;
+
+        public String getColor() {
+            return color;
+        }
+
+        public double getWeight() {
+            return weight;
+        }
+
+        public String getQuality() {
+            return quality;
+        }
+    }
+
+    public static List<Apple> filterGreenApples(List<Apple> inventory) {
+        List<Apple> result = new ArrayList<>();
+        for (Apple apple : inventory) {
+            if (apple.getColor().equals("Green")) {
+                result.add(apple);
+            }
+        }
+        return result;
+    }
+
+    public static List<Apple> filterHeavyApples(List<Apple> inventory) {
+        List<Apple> result = new ArrayList<>();
+        for (Apple apple : inventory) {
+            if (apple.getWeight() >= 100) {
+                result.add(apple);
+            }
+        }
+        return result;
+    }
+
+    public static List<Apple> filterGoodQualityApples(List<Apple> inventory) {
+        List<Apple> result = new ArrayList<>();
+        for (Apple apple : inventory) {
+            if (apple.getQuality().equals("High")) {
+                result.add(apple);
+            }
+        }
+        return result;
+    }
+
+    static List<Apple> filterApples(List<Apple> inventory, Predicate<Apple> p) {
+        return inventory.stream()
+            .filter(p)
+            .collect(toList());
+    }
+
+    public void test() {
+        List<Apple> inventory = new ArrayList<>();
+        filterApples(inventory, a -> a.getColor().equals("Green") );
+        filterApples(inventory, a -> a.getQuality().equals("Good") );
+        filterApples(inventory, a -> a.getWeight() >= 100);
+    }
 }
