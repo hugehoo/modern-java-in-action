@@ -94,5 +94,28 @@ Q. 람다가 등장한 배경
 
 Q. 코틀린에서는 functional interface 가 어떤 형식으로 정의돼 있을까?
 
-
-
+### 기본형 특화
+- 자바의 자료형은 기본형과 참조형으로 나뉘는데, 제너릭 파라미터는 참조형만 허용된다.
+- 기본형을 참조형으로 변형하는 것을 Boxing, 참조형을 기본형으로 변환하는 것을 unboxing 이라 한다.
+- 오토박싱은 박싱과 언박싱이 프로그램에 의해 자동으로 이루어지는 것을 의미한다.
+``` java
+List<Integer> list = new ArrayList<>();
+for (int i = 300; i < 400; i++) {
+    list.add(i);
+}
+```
+- 위 코드는 기본형 int 가 자동으로 Integer 로 박싱된다. 하지만 이런 변환 과정은 비용이 소모된다.
+  - Boxing 값은 primitive type 을 감싸는 Wrapper 이며, 힙에 저장된다.
+  - 즉 Boxing 된 값은 더 많은 메모리를 소비하며, 기본형을 가져올 때도 메모리를 탐색하는 과정이 필요하다 (Why? 더 찾아보자)
+- Java8 에서는 기본형을 입출력으로 사용하는 상황에서 오토박싱을 피할 수 있는 특별한 함수형 인터페이스를 제공한다.
+``` java
+public void boxing() {
+    // 1000 을 박싱하지 않는다.
+    IntPredicate evenNumbers = (int i) -> i % 2 == 0;
+    evenNumbers.test(1000);
+    
+    // 1000 을 박싱한다 -> 고비용
+    Predicate<Integer> oddNumbers = (Integer i) -> i % 2 != 0;
+    oddNumbers.test(1000);
+}
+```

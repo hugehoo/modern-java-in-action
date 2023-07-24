@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.IntPredicate;
 import java.util.function.Predicate;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -86,6 +87,18 @@ public class Chapter03Test {
             .filter(p.and(condition))
             .collect(toList());
     }
+
+    public void boxing() {
+        IntPredicate evenNumbers = (int i) -> i % 2 == 0;
+        evenNumbers.test(1000);
+        Predicate<Integer> oddNumbers = (Integer i) -> i % 2 != 0;
+        oddNumbers.test(1000);
+    }
+
+    // public interface IntPredicate {
+    //     boolean test(int t);
+    // }
+
 
 
 }
