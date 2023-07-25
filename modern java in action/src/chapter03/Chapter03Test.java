@@ -88,17 +88,76 @@ public class Chapter03Test {
             .collect(toList());
     }
 
-    public void boxing() {
-        IntPredicate evenNumbers = (int i) -> i % 2 == 0;
-        evenNumbers.test(1000);
-        Predicate<Integer> oddNumbers = (Integer i) -> i % 2 != 0;
-        oddNumbers.test(1000);
+    @Test
+    // 시간은 유의미한 차이를 내지 못한다. 그렇다면 메모리는
+    void boxingTimeCompareTest() {
+        int repetitions = 2_000_000_000; // Adjust the number of repetitions if needed.
+
+        // Test non-auto boxing.
+        long start = System.nanoTime();
+        for (int i = 0; i < repetitions; i++) {
+            nonAutoBoxing(i);
+        }
+        long end = System.nanoTime();
+        System.out.println("Non-auto boxing time: " + (end - start) + " nanoseconds");
+
+        // Test auto boxing.
+        long start2 = System.nanoTime();
+        for (int i = 0; i < repetitions; i++) {
+            autoBoxing(i);
+        }
+        long end2 = System.nanoTime();
+        System.out.println("Auto boxing time: " + (end2 - start2) + " nanoseconds");
     }
 
-    // public interface IntPredicate {
-    //     boolean test(int t);
-    // }
+    public static boolean nonAutoBoxing(int j) {
+        IntPredicate evenNumbers = (int i) -> i % 2 == 0;
+        return evenNumbers.test(j);
+    }
 
+    public static boolean autoBoxing(int j) {
+        Predicate<Integer> oddNumbers = (Integer i) -> i % 2 != 0;
+        return oddNumbers.test(j);
+    }
+
+
+    @Test
+    void testMemoryUsage() {
+        int repetitions = 1000; // Adjust the number of repetitions if needed.
+
+        // Warm up the JVM by running the methods a few times before testing.
+        for (int i = 0; i < 10; i++) {
+            nonAutoBoxing(i);
+            autoBoxing(i);
+        }
+
+        Object[] nonAutoBoxingResults = new Object[repetitions];
+        Object[] autoBoxingResults = new Object[repetitions];
+
+        // Test non-auto boxing.
+        Runtime.getRuntime().gc(); // Run garbage collector to free unnecessary memory.
+        long startMemory = getCurrentMemory();
+        for (int i = 0; i < repetitions; i++) {
+            nonAutoBoxingResults[i] = nonAutoBoxing(i);
+        }
+        long nonAutoBoxingMemory = getCurrentMemory() - startMemory;
+
+        // Test auto boxing.
+        Runtime.getRuntime().gc(); // Run garbage collector to free unnecessary memory.
+        startMemory = getCurrentMemory();
+        for (int i = 0; i < repetitions; i++) {
+            autoBoxingResults[i] = autoBoxing(i);
+        }
+        long autoBoxingMemory = getCurrentMemory() - startMemory;
+
+        System.out.println("Non-auto boxing memory: " + nonAutoBoxingMemory + " bytes");
+        System.out.println("Auto boxing memory: " + autoBoxingMemory + " bytes");
+    }
+
+    private static long getCurrentMemory() {
+        Runtime runtime = Runtime.getRuntime();
+        return runtime.totalMemory() - runtime.freeMemory();
+    }
 
 
 }
