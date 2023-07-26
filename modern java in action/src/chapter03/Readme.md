@@ -119,3 +119,75 @@ public void boxing() {
     oddNumbers.test(1000);
 }
 ```
+
+### 람다의 형식 검사 / 형식 추론
+- 자바 컴파일러는 람다표현식이 사용된 콘텍스트를 이용해 람다 표현식과 함수형 인터페이스를 추론한다.
+- 결과적으로 컴파일러는 람다 표현식의 파라미터 형식에 접근할 수 있으므로 람다 문법에서 이를 생략할 수 있다.
+
+``` java
+// 람다가 사용되는 콘텍스트를 이용해서 람다의 형식을 추론 가능
+List<Apple> apples = filter(사과박스, (Apple apple) -> apple.getWeight() > 100);
+
+// 위 람다식은 아래처럼 사용할 수 있다. 파라미터 a 는 타입을 명시적으로 지정하지 않았다.
+List<Apple> apples = filter(사과박스,  a -> a.getWeight() > 100);
+```
+### 람다 캡쳐링
+- 람다 표현식은 익명 함수 처럼 자유 변수(외부에서 정의된 변수)를 활용할 수 있다.
+- 이 같은 동작을 람다 캡쳐링이라 부른다.
+``` java
+@Test
+void test() {
+    int portNumber = 1023;
+    int portNumber2 = 8080;
+
+    Runnable r = () -> assertNotEquals(portNumber, portNumber2);
+}
+
+@Test
+void test() {
+    int portNumber = 1023;
+    int portNumber2 = 8080;
+
+    Runnable r = () -> assertNotEquals(portNumber, portNumber2);
+    portNumber = 1024;
+    // java: local variables referenced from a lambda expression must be final or effectively final
+}
+```
+- 두번째 테스트 코드를 보면 지역변수는 명시적으로 final 로 선언되거나, 실질적으로 final 변수처럼 사용되어야 한다. 즉 재할당의 과정이 있으면 안된다.
+- 인스턴스 변수와 지역 변수의 차이를 생각해보자. 인스턴스 변수는 힙에, 지역변수는 스택에 저장된다.
+- 람다에서 지역변수에 바로 접근할 수 있다는 가정하에, 람다가 스레드에서 실행되면 변수를 할당한 스레드가 사라져 변수 할당이 해제되었는데도 람다를 실행하는 스레드에서는 해당 변수에 접근하려 할 수 있다.
+- 따라서 자바 구현에서는 원래 변수에 접근을 허용하는 것이 아니라(그렇게 보일 뿐), 자유 지역변수의 복사본을 제공한다. 즉 복사본의 값이 바뀌지 않아야 하므로 지역 변수는 한번만 값을 할당해야 하는 (마치 final) 제약이 생긴 것이다.
+
+### 메서드 참조
+- 메서드 참조는 특정 메서드만을 호출하는 람다의 축약형으로 볼 수 있다.
+- 메서드 참조를 만드는 세가지 방법
+1. 정적 메서드 참조 (ex, `Integer::parseInt`)
+2. 다양한 형식의 인스턴스 메서드 참조 (ex, `String::length`)
+3. 기존 객체의 인스턴스 메서드 참조 (ex, `expensiveTransaction::getValue`) 
+
+``` java
+Transaction expensiveTransaction = new Transaction();
+() -> expensiveTransaction.getValue();
+expensiveTransaction::getValue; // (1)
+Transaction::getValue; // (2)
+```
+(2) 처럼 하면 되는데 왜 (1) 로 하느냐 라고 생각할 수 있다.
+내 생각엔, expensiveTransaction 객체만이 가지는 특정한 value 가 있을 경우, 
+일반 정적메서드 참조(Transaction::getValue) 가 아닌, expensiveTransaction::getValue 로 하는게 맞기 때문. 
+
+이렇게 쓸 수도 있다.
+``` java
+  void methodRef() {
+      String word = "word";
+      boolean result = filter(word, s -> isValidName(s)); // 1
+      boolean result = filter(word, this::isValidName); // 2
+  }
+
+  boolean filter(String inventory, Predicate<String> p) {
+      return p.test(inventory);
+  }
+
+  private boolean isValidName(String str) {
+      return Character.isUpperCase(str.charAt(0));
+  }
+```

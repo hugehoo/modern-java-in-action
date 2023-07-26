@@ -4,11 +4,15 @@ import static chapter01.Color.*;
 import static java.util.stream.Collectors.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 import java.util.function.Consumer;
 import java.util.function.IntPredicate;
 import java.util.function.Predicate;
+
+import javax.swing.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -81,6 +85,12 @@ public class Chapter03Test {
             .collect(toList());
     }
 
+    static List<Apple> filter(List<Apple> inventory, Predicate<Apple> p) {
+        return inventory.stream()
+            .filter(p)
+            .collect(toList());
+    }
+
     static List<Apple> filterApplesWithHighQuality(List<Apple> inventory, Predicate<Apple> p) {
         Predicate<Apple> condition = apple -> apple.getQuality().equals("high");
         return inventory.stream()
@@ -89,7 +99,7 @@ public class Chapter03Test {
     }
 
     @Test
-    // 시간은 유의미한 차이를 내지 못한다. 그렇다면 메모리는
+        // 시간은 유의미한 차이를 내지 못한다. 그렇다면 메모리는
     void boxingTimeCompareTest() {
         int repetitions = 2_000_000_000; // Adjust the number of repetitions if needed.
 
@@ -119,7 +129,6 @@ public class Chapter03Test {
         Predicate<Integer> oddNumbers = (Integer i) -> i % 2 != 0;
         return oddNumbers.test(j);
     }
-
 
     @Test
     void testMemoryUsage() {
@@ -159,5 +168,12 @@ public class Chapter03Test {
         return runtime.totalMemory() - runtime.freeMemory();
     }
 
+    @Test
+    void test() {
+        int portNumber = 1023;
+        int portNumber2 = 8080;
+
+        Runnable r = () -> assertNotEquals(portNumber, portNumber2);
+    }
 
 }
