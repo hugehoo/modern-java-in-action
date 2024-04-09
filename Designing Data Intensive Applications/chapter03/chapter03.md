@@ -103,18 +103,17 @@ Log Structured Storage Engine
 
 - Log File 기반으로 작동하는 저장소
 - append-only 방식으로 저장 → 이미 저장된 데이터는 immutable
-![img.png](Untitled.png)
-![img_1.png](Untitled 1.png)
-![img_1.png](Untitled 2.png)
-![img_1.png](Untitled 3.png)
-![img_1.png](Untitled 4.png)
-![img_1.png](Untitled 5.png)
-![img_1.png](Untitled 6.png)
-![img_1.png](Untitled 7.png)
-![img_1.png](Untitled 8.png)
-![img_1.png](Untitled 9.png)
-![img_1.png](Untitled 10.png)
-![img_1.png](Untitled 11.png)
+![img_1.png](Untitled%201.png)
+![img_1.png](Untitled%202.png)
+![img_1.png](Untitled%203.png)
+![img_1.png](Untitled%204.png)
+![img_1.png](Untitled%205.png)
+![img_1.png](Untitled%206.png)
+![img_1.png](Untitled%207.png)
+![img_1.png](Untitled%208.png)
+![img_1.png](Untitled%209.png)
+![img_1.png](Untitled%2010.png)
+![img_1.png](Untitled%2011.png)
 
 SS 테이블을 압축하는 다양한 전략 → size-tiered , leveled compaction
 
