@@ -9,3 +9,4 @@
 - [X] [데이터 중심 어플리케이션 설계](https://github.com/weekly-book-study/designing-data-intensive-applications)
 - [ ] Go 100 mistakes
 - [ ] 켄트 벡의 Tidy First?
+- [ ] 데이터베이스 인터널스
